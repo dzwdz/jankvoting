@@ -1,0 +1,15 @@
+{
+    "ttv": {
+        "identity": {
+            "username": "bot's username",
+            "password": "oauth token"
+        },
+        "channels": [
+            "channel name"
+        ]
+    },
+    "rcon": {
+        "address": "127.0.0.1",
+        "password": "rcon password"
+    }
+}
