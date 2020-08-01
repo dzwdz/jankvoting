@@ -13,9 +13,9 @@ const server = http.createServer((req, res) => {
         }
     });
 });
-const wss = new ws.Server({server});
-
 server.listen(1312);
+
+const wss = new ws.Server({server});
 
 function broadcastData(data) {
     wss.clients.forEach((client) => {
@@ -33,7 +33,7 @@ module.exports.updateVoteCount = function (currentVote) {
     broadcastData(data);
 }
 
-module.exports.startVoting = function (currentVote) {
+module.exports.votingStart = function (currentVote) {
     broadcastData({
         "options": [
             [0, currentVote.options[0].fullName],
@@ -44,7 +44,7 @@ module.exports.startVoting = function (currentVote) {
     });
 }
 
-module.exports.endVoting = function (currentVote, winner) {
+module.exports.updateWinner = function (currentVote, winner) {
     broadcastData({
         "winner": winner
     });
