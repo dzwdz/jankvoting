@@ -1,5 +1,5 @@
 const tmi = require("tmi.js");
-const rcon = require("srcds-rcon");
+const Rcon = require("rcon");
 const config = require("./config.json");
 const commands = require("./commands.json");
 
@@ -11,7 +11,6 @@ var currentVote = {
 };
 
 const ttv = new tmi.client(config.ttv);
-
 ttv.on('message', (channel, tags, msg, self) => {
     if (!currentVote.active) return;
     if (currentVote.voters.has(tags.username)) return;
@@ -21,17 +20,20 @@ ttv.on('message', (channel, tags, msg, self) => {
         currentVote.voters.add(tags.username);
     }
 });
-
 ttv.connect().catch(console.error);
 
-setInterval(() => {
+function voteCycle() {
     if (currentVote.active) {
         console.log("Finishing the vote...");
-        console.log(currentVote.options);
+        //console.log(currentVote.options);
+
         let winner = currentVote.options.sort((a, b) => b.votes - a.votes)[0];
         s = winner.name + " won with " + winner.votes + " votes";
+
         ttv.say(config.ttv.channels[0], s);
         console.log(s);
+
+        game.send(winner.command);
     } else {
         console.log("Creating new vote...");
 
@@ -54,4 +56,16 @@ setInterval(() => {
         }
     }
     currentVote.active = !currentVote.active;
-}, 30000);
+}
+
+const game = Rcon(config.rcon.address, config.rcon.port, config.rcon.password);
+game.on('auth', function() {
+    console.log("Connected!");
+    setInterval(voteCycle, config.voteInterval);
+  }).on('end', function() {
+    console.log("RCON connection closed, quitting...");
+    process.exit();
+});
+
+console.log("Connecting to RCON...")
+game.connect();

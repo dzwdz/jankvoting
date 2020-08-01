@@ -1,26 +1,26 @@
 [
     {
         "name": "Placeholder #1",
-        "command": ""
+        "command": "say boo"
     },
     {
         "name": "Placeholder #2",
-        "command": ""
+        "command": "say boo"
     },
     {
         "name": "Placeholder #3",
-        "command": ""
+        "command": "say boo"
     },
     {
         "name": "Placeholder #4",
-        "command": ""
+        "command": "say boo"
     },
     {
         "name": "Placeholder #5",
-        "command": ""
+        "command": "say boo"
     },
     {
         "name": "Placeholder #6",
-        "command": ""
+        "command": "say boo"
     }
 ]

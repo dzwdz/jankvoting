@@ -1,15 +1,17 @@
 {
     "ttv": {
         "identity": {
-            "username": "bot's username",
-            "password": "oauth token"
+            "username": "bot username",
+            "password": "bot oauth token"
         },
         "channels": [
-            "channel name"
+            "ttv channel name"
         ]
     },
     "rcon": {
         "address": "127.0.0.1",
-        "password": "rcon password"
-    }
+        "port": 25575,
+        "password": ""
+    },
+    "voteInterval": 30000
 }
