@@ -1,0 +1,75 @@
+<style>
+* { box-sizing: border-box; }
+body {
+  background: green;
+  font-family: "Segoe UI", sans-serif;
+  color: #eee;
+  font-size: 2em;
+  font-weight: 600;
+  text-shadow: black 0 .1em .1em;
+}
+.perc {
+  text-align: right;
+  width: 4em;
+  display: inline-block;
+  border-right: .15em solid #eee;
+  padding-right: .3em;
+}
+#status .perc { border-right: none; }
+.option { margin-top: .5em; }
+.winner { color: #5f5; }
+</style>
+
+<div id="0" class="option">
+    <span class="perc">0%</span>
+    <span class="desc">1 - Placeholder effect</span>
+</div>
+<div id="1" class="option">
+    <span class="perc">50%</span>
+    <span class="desc">2 - Placeholder effect</span>
+</div>
+<div id="2" class="option winner">
+    <span class="perc">100%</span>
+    <span class="desc">3 - Placeholder effect</span>
+</div>
+<div id="status" class="option">
+    <span class="perc">0s</span>
+    <span class="desc">until the next vote.</span>
+</div>
+
+<script>
+    function connect() {
+        const socket = new WebSocket("ws://localhost:1312");
+        socket.addEventListener("message", (ev) => {
+            let data = JSON.parse(ev.data);
+            console.log(data);
+
+            for (let i in data.options) {
+                let el = document.getElementsByClassName("option")[i];
+                el.children[0].innerText = data.options[i][0]+"%";
+                if (data.options[i][1])
+                    el.children[1].innerText = data.options[i][1];
+            }
+
+            if (typeof data.winner != "undefined") {
+                for (let el of document.getElementsByClassName("winner"))
+                    el.classList.remove("winner");
+                if (document.getElementById(data.winner))
+                    document.getElementById(data.winner).classList.add("winner");
+            }
+
+            if (data.status) {
+                let el = document.getElementById("status");
+                el.children[0].innerText = data.status[0]+"s"
+                el.children[1].innerText = data.status[1] ? "until the voting ends." : "until the next vote."
+            }
+        });
+        socket.addEventListener("close", () => {
+            setTimeout(connect, 5000)
+        });
+        socket.addEventListener("error", () => {
+            setTimeout(connect, 5000)
+        });
+    }
+    connect();
+</script>

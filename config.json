@@ -13,5 +13,5 @@
         "port": 25575,
         "password": ""
     },
-    "voteInterval": 30000
+    "voteInterval": 60
 }
