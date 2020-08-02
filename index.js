@@ -4,14 +4,7 @@ const config = require("./config.json");
 const commands = require("./commands.json");
 const frontend = require("./frontend/server.js");
 
-var currentVote = {
-    "active": false,
-    "options": [],
-    "offset": 1,
-    "voters": null,
-    "totalVotes": 0,
-    "countdown": 10
-};
+var currentVote = {}; // set in setup()
 
 const ttv = new tmi.client(config.ttv);
 ttv.connect().catch(console.error);
@@ -31,6 +24,8 @@ ttv.on('message', (channel, tags, msg, self) => {
 
 // runs every second when connected to RCON
 function update() {
+    if (!game.hasAuthed) return;
+
     // update the frontend
     frontend.updateTimer(currentVote);
     if (currentVote.active) frontend.updateVoteCount(currentVote);
@@ -74,14 +69,32 @@ function update() {
     currentVote.active = !currentVote.active;
 }
 
-const game = Rcon(config.rcon.address, config.rcon.port, config.rcon.password);
-game.on('auth', function() {
-    console.log("Connected!");
-    setInterval(update, 1000);
-  }).on('end', function() {
-    console.log("RCON connection closed, quitting...");
-    process.exit();
-});
+function setup() {
+    console.log("Connecting to RCON...");
+    game.connect();
 
-console.log("Connecting to RCON...")
-game.connect();
+    currentVote = {
+        "active": false,
+        "options": [],
+        "offset": 1,
+        "voters": null,
+        "totalVotes": 0,
+        "countdown": 10
+    };
+}
+
+const game = Rcon(config.rcon.address, config.rcon.port, config.rcon.password);
+game.on('auth', () => {
+    console.log("Connected!");
+  }).on('end', () => {
+    console.log("RCON connection closed...");
+    setTimeout(setup, 10000);
+  }).on('error', (err) => {
+    console.log(err);
+    game.disconnect();
+    game.hasAuthed = false; // for some reason this doesn't automatically change to false after disconnecting
+    setTimeout(setup, 10000);
+  });
+
+setup();
+setInterval(update, 1000);
