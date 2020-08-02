@@ -13,8 +13,6 @@ const server = http.createServer((req, res) => {
         }
     });
 });
-server.listen(1312);
-
 const wss = new ws.Server({server});
 
 function broadcastData(data) {
@@ -24,34 +22,37 @@ function broadcastData(data) {
     });
 }
 
-module.exports.updateVoteCount = function (currentVote) {
+module.exports.updateVoteCount = (currentVote) => {
     let data = {
         "options": []
     };
     for (let option of currentVote.options)
         data.options.push([Math.round(option.votes/currentVote.totalVotes*100) || 0]);
     broadcastData(data);
-}
+};
 
-module.exports.votingStart = function (currentVote) {
+module.exports.updateVoteNames = (currentVote) => {
     broadcastData({
         "options": [
             [0, currentVote.options[0].fullName],
             [0, currentVote.options[1].fullName],
             [0, currentVote.options[2].fullName],
-        ],
-        "winner": -1
+        ]
     });
-}
+};
 
-module.exports.updateWinner = function (currentVote, winner) {
+module.exports.updateWinner = (winner) => {
     broadcastData({
         "winner": winner
     });
-}
+};
 
-module.exports.updateTimer = function (currentVote) {
+module.exports.updateTimer = (currentVote) => {
     broadcastData({
         "status": [currentVote.countdown, currentVote.active]
     });
-}
+};
+
+module.exports.listen = (port) => {
+    server.listen(port);
+};

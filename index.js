@@ -42,7 +42,7 @@ function update() {
         ttv.say(config.ttv.channels[0], s);
         console.log(s);
 
-        frontend.updateWinner(currentVote, currentVote.options.indexOf(winner));
+        frontend.updateWinner(currentVote.options.indexOf(winner));
     } else {
         console.log("Creating a new poll...");
 
@@ -62,7 +62,8 @@ function update() {
             ttv.say(config.ttv.channels[0], currentVote.options[i].fullName);
             console.log(currentVote.options[i].fullName);
         }
-        frontend.votingStart(currentVote);
+        frontend.updateVoteNames(currentVote);
+        frontend.updateWinner(-1);
     }
 
     currentVote.countdown = config.voteInterval;
@@ -96,5 +97,6 @@ game.on('auth', () => {
     setTimeout(setup, 10000);
   });
 
+frontend.listen(1312);
 setup();
 setInterval(update, 1000);
