@@ -4,21 +4,27 @@ const config = require("./config.json");
 const commands = require("./commands.json");
 const frontend = require("./overlayServer.js");
 
-var currentVote = {}; // set in setup()
+var currentlyVoting = false;
+var countdown = 10;
+var voters = new Set();
+var totalVotes = 0;
+var options = [];
+var offset = 1;
 
 const ttv = new tmi.client(config.ttv);
 ttv.connect().catch(console.error);
 
 // count votes
 ttv.on('message', (channel, tags, msg, self) => {
-    if (!currentVote.active) return;
-    if (currentVote.voters.has(tags.username)) return;
+    if (!currentlyVoting) return;
+    if (tags.username == config.ttv.identity.username) return; // don't count the bot's "votes"
+    if (voters.has(tags.username)) return;
 
-    let num = parseInt(msg) - currentVote.offset;
-    if (currentVote.options[num]) {
-        currentVote.options[num].votes++;
-        currentVote.totalVotes++;
-        currentVote.voters.add(tags.username);
+    let num = parseInt(msg) - offset;
+    if (options[num]) {
+        options[num].votes++;
+        totalVotes++;
+        voters.add(tags.username);
     }
 });
 
@@ -27,76 +33,69 @@ function update() {
     if (!game.hasAuthed) return;
 
     // update the frontend
-    frontend.updateTimer(currentVote);
-    if (currentVote.active) frontend.updateVoteCount(currentVote);
+    frontend.updateStatus(currentlyVoting, countdown);
+    if (currentlyVoting) frontend.updateVoteCount(options, totalVotes);
 
     // handle starting/ending polls
-    if (currentVote.countdown--) return;
-    if (currentVote.active) {
+    if (countdown--) return;
+    if (currentlyVoting) {
         console.log("Finishing the poll...");
 
-        let winner = currentVote.options.sort((a, b) => b.votes - a.votes)[0];
+        let winner = options.sort((a, b) => b.votes - a.votes)[0];
         game.send(winner.command);
 
-        s = winner.name + " won with " + winner.votes + " votes";
+        let s = winner.name + " won with " + winner.votes + " votes";
         ttv.say(config.ttv.channels[0], s);
         console.log(s);
 
-        frontend.updateWinner(currentVote.options.indexOf(winner));
+        frontend.updateWinner(options.indexOf(winner));
     } else {
         console.log("Creating a new poll...");
 
-        // allow everyone to vote again
-        currentVote.voters = new Set([config.ttv.identity.username]);
+        voters = new Set();
 
         // pick 3 random effects
-        let options = new Set();
-        while (options.size < 3)
-            options.add(commands[Math.floor(Math.random() * commands.length)]);
-        currentVote.options = Array.from(options);
+        let newOptions = new Set();
+        while (newOptions.size < 3)
+            newOptions.add(commands[Math.floor(Math.random() * commands.length)]);
+        options = Array.from(newOptions);
 
-        for (let i in currentVote.options) {
-            currentVote.options[i].votes = 0;
-            currentVote.options[i].fullName = parseInt(i) + currentVote.offset + " - " + currentVote.options[i].name;
+        for (let i in options) {
+            options[i].votes = 0;
+            options[i].fullName = parseInt(i) + offset + " - " + options[i].name;
 
-            ttv.say(config.ttv.channels[0], currentVote.options[i].fullName);
-            console.log(currentVote.options[i].fullName);
+            ttv.say(config.ttv.channels[0], options[i].fullName);
+            console.log(options[i].fullName);
         }
-        frontend.updateVoteNames(currentVote);
+        frontend.updateOptionNames(options);
         frontend.updateWinner(-1);
     }
 
-    currentVote.countdown = config.voteInterval;
-    currentVote.active = !currentVote.active;
+    countdown = config.voteInterval;
+    currentlyVoting = !currentlyVoting;
 }
 
-function setup() {
+function connectToRCON() { // just passing game.connect to setTimeout causes an error
     console.log("Connecting to RCON...");
     game.connect();
-
-    currentVote = {
-        "active": false,
-        "options": [],
-        "offset": 1,
-        "voters": null,
-        "totalVotes": 0,
-        "countdown": 10
-    };
 }
 
 const game = Rcon(config.rcon.address, config.rcon.port, config.rcon.password);
 game.on('auth', () => {
     console.log("Connected!");
+    currentlyVoting = false;
+    countdown = 10;
   }).on('end', () => {
-    console.log("RCON connection closed...");
-    setTimeout(setup, 10000);
+    console.log("RCON connection closed, reconnecting in 10s.");
+    setTimeout(connectToRCON, 10000);
   }).on('error', (err) => {
     console.log(err);
     game.disconnect();
     game.hasAuthed = false; // for some reason this doesn't automatically change to false after disconnecting
-    setTimeout(setup, 10000);
+    console.log("Encountered a RCON error, reconnecting in 10s.");
+    setTimeout(connectToRCON, 10000);
   });
 
 frontend.listen(1312);
-setup();
+connectToRCON();
 setInterval(update, 1000);

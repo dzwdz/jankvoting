@@ -22,21 +22,21 @@ function broadcastData(data) {
     });
 }
 
-module.exports.updateVoteCount = (currentVote) => {
+module.exports.updateVoteCount = (options, totalVotes) => {
     let data = {
         "options": []
     };
-    for (let option of currentVote.options)
-        data.options.push([Math.round(option.votes/currentVote.totalVotes*100) || 0]);
+    for (let option of options)
+        data.options.push([Math.round(option.votes/totalVotes*100) || 0]);
     broadcastData(data);
 };
 
-module.exports.updateVoteNames = (currentVote) => {
+module.exports.updateOptionNames = (options) => {
     broadcastData({
         "options": [
-            [0, currentVote.options[0].fullName],
-            [0, currentVote.options[1].fullName],
-            [0, currentVote.options[2].fullName],
+            [0, options[0].fullName],
+            [0, options[1].fullName],
+            [0, options[2].fullName],
         ]
     });
 };
@@ -47,9 +47,9 @@ module.exports.updateWinner = (winner) => {
     });
 };
 
-module.exports.updateTimer = (currentVote) => {
+module.exports.updateStatus = (currentlyVoting, countdown) => {
     broadcastData({
-        "status": [currentVote.countdown, currentVote.active]
+        "status": [countdown, currentlyVoting]
     });
 };
 
