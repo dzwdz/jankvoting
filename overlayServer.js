@@ -3,7 +3,7 @@ const http = require("http");
 const ws = require("ws");
 
 const server = http.createServer((req, res) => {
-    fs.readFile("frontend/index.html", (err, data) => {
+    fs.readFile("overlay.html", (err, data) => {
         if (err) {
             res.writeHead(404);
             res.end(JSON.stringify(err));

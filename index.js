@@ -2,7 +2,7 @@ const tmi = require("tmi.js");
 const Rcon = require("rcon");
 const config = require("./config.json");
 const commands = require("./commands.json");
-const frontend = require("./frontend/server.js");
+const frontend = require("./overlayServer.js");
 
 var currentVote = {}; // set in setup()
 
