@@ -1,6 +1,6 @@
+const fs = require("fs");
 const tmi = require("tmi.js");
 const config = require("./config.json");
-const commands = require("./commands.json");
 
 module.exports = function (voteWinnerCallback) {
     var isRunning = false;
@@ -11,6 +11,14 @@ module.exports = function (voteWinnerCallback) {
     var options = [];
     var offset = 1;
 
+    var cmdRootDir = __dirname + "/effects/";
+    var commands = fs.readdirSync(cmdRootDir)
+                    .map((filename) => {
+                        if (filename.substr(-5) != ".json") return [];
+                        console.log("Loading", filename);
+                        return JSON.parse(fs.readFileSync(cmdRootDir+filename));
+                    }).flat();
+    
     const frontend = require("./overlayServer.js")(1312);
 
     const ttv = new tmi.client(config.ttv);
