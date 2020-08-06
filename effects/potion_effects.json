@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Speed I",
+        "command": "effect give @a speed"
+    },
+    {
+        "name": "Blindness",
+        "command": "effect give @a minecraft:blindness 15"
+    },
+    {
+        "name": "Slowness",
+        "command": "effect give @a slowness"
+    },
+    {
+        "name": "Poison",
+        "command": "effect give @a poison 15"
+    },
+    {
+        "name": "Regenerate 3HP",
+        "command": "effect give @a regeneration 15"
+    },
+    {
+        "name": "Nauseous",
+        "command": "effect give @a nausea"
+    },
+    {
+        "name": "Fire Resistance",
+        "command": "effect give @a fire_resistance"
+    },
+    {
+        "name": "Night Vision",
+        "command": "effect give @a night_vision"
+    },
+    {
+        "name": "Mining Fatigue",
+        "command": "effect give @a mining_fatigue"
+    },
+    {
+        "name": "Haste I",
+        "command": "effect give @a haste"
+    }
+]

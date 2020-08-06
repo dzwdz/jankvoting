@@ -1,0 +1,18 @@
+[
+    {
+        "name": "Winner Winner Chicken Dinner",
+        "command": "give @a minecraft:cooked_chickent"
+    },
+    {
+        "name": "Hoes",
+        "command": "give @a minecraft:golden_hoe 9"
+    },
+    {
+        "name": "Give a Poppy",
+        "command": "give @a poppy"
+    },
+    {
+        "name": "nIce",
+        "command": "give @a ice"
+    }
+]

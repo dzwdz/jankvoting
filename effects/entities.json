@@ -1,0 +1,34 @@
+[
+    {
+        "name": "Summon a Bee",
+        "command": "execute at @a run summon minecraft:bee ~ ~2 ~"
+    },
+    {
+        "name": "Summon a Creeper",
+        "command": "execute at @a run summon minecraft:creeper ~ ~3 ~"
+    },
+    {
+        "name": "Invulnerable Zombie",
+        "command": "execute at @a run summon minecraft:zombie ~ ~3 ~ {Invulnerable:true}"
+    },
+    {
+        "name": "Speedy Zombie",
+        "command": "execute at @a run summon minecraft:zombie ~ ~3 ~ {Attributes:[{Name:\"generic.movement_speed\", Base:0.4}]}"
+    },
+    {
+        "name": "Spooky Scary Skeleton",
+        "command": "execute at @a run summon minecraft:skeleton ~ ~3 ~ {ArmorItems:[{},{},{},{Count:1,id:carved_pumpkin}]}"
+    },
+    {
+        "name": "Summon a Fireball",
+        "command": "execute at @a run summon minecraft:fireball ~ ~1 ~"
+    },
+    {
+        "name": "jeb_!",
+        "command": "execute at @a run summon minecraft:sheep ~ ~ ~ {CustomName:\"\\\"jeb_\\\"\"}"
+    },
+    {
+        "name": "Summon a Silverfish",
+        "command": "execute at @a run summon minecraft:silverfish ~ ~ ~"
+    }
+]

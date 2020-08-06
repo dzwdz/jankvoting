@@ -1,0 +1,42 @@
+[
+    {
+        "name": "Set Time to Midnight",
+        "command": "time set midnight"
+    },
+    {
+        "name": "Set Time to Morning",
+        "command": "time set day"
+    },
+    {
+        "name": "Fake Creeper Hiss",
+        "command": "execute at @a run playsound minecraft:entity.creeper.primed hostile @a"
+    },
+    {
+        "name": "Give 1 XP Level",
+        "command": "experience add @a 1 levels"
+    },
+    {
+        "name": "Remove 1 XP Level",
+        "command": "experience add @a -1 levels"
+    },
+    {
+        "name": "Clear Weather",
+        "command": "weather clear"
+    },
+    {
+        "name": "Thunder",
+        "command": "weather thunder"
+    },
+    {
+        "name": "Give 1 XP Level",
+        "command": "experience add @a 1 levels"
+    },
+    {
+        "name": "Remove a block under the player",
+        "command": "execute at @a run setblock ~ ~-1 ~ minecraft:air"
+    },
+    {
+        "name": "Nothing",
+        "command": ""
+    }
+]
