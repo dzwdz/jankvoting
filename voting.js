@@ -1,7 +1,6 @@
 const tmi = require("tmi.js");
 const config = require("./config.json");
 const commands = require("./commands.json");
-const frontend = require("./overlayServer.js");
 
 module.exports = function (voteWinnerCallback) {
     var isRunning = false;
@@ -11,6 +10,8 @@ module.exports = function (voteWinnerCallback) {
     var totalVotes = 0;
     var options = [];
     var offset = 1;
+
+    const frontend = require("./overlayServer.js")(1312);
 
     const ttv = new tmi.client(config.ttv);
     ttv.connect().catch(console.error);
@@ -76,7 +77,6 @@ module.exports = function (voteWinnerCallback) {
         currentlyVoting = !currentlyVoting;
     }
 
-    frontend.listen(1312);
     setInterval(update, 1000);
 
     return {
