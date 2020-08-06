@@ -5,7 +5,7 @@ const config = require("./config.json");
 module.exports = function (voteWinnerCallback) {
     var isRunning = false;
     var currentlyVoting = false;
-    var countdown = 10;
+    var countdown = 100;
     var voters = new Set();
     var totalVotes = 0;
     var options = [];
@@ -89,7 +89,7 @@ module.exports = function (voteWinnerCallback) {
 
     return {
         start: () => {
-            countdown = 10;
+            countdown = 100;
             currentlyVoting = false;
             isRunning = true;
         },
