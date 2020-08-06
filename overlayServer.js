@@ -4,7 +4,7 @@ const ws = require("ws");
 
 module.exports = function (port) {
     const server = http.createServer((req, res) => {
-        fs.readFile("overlay.html", (err, data) => {
+        fs.readFile(__dirname + "/overlay.html", (err, data) => {
             if (err) {
                 res.writeHead(404);
                 res.end(JSON.stringify(err));
