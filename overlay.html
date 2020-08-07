@@ -33,11 +33,17 @@ body {
     <span class="desc">3 - Placeholder effect</span>
 </div>
 <div id="status" class="option">
-    <span class="perc">0s</span>
-    <span class="desc">until the next vote.</span>
+    <span class="perc"></span>
+    <span class="desc">disconnected</span>
 </div>
 
 <script>
+    function onDisconnect() {
+        let el = document.getElementById("status");
+        el.children[0].innerText = ""
+        el.children[1].innerText = "disconnected"
+        connect();
+    }
     function connect() {
         const socket = new WebSocket("ws://localhost:1312");
         socket.addEventListener("message", (ev) => {
@@ -64,12 +70,8 @@ body {
                 el.children[1].innerText = data.status[1] ? "until the voting ends." : "until the next vote."
             }
         });
-        socket.addEventListener("close", () => {
-            connect();
-        });
-        socket.addEventListener("error", () => {
-            connect();
-        });
+        socket.addEventListener("close", onDisconnect);
+        socket.addEventListener("error", onDisconnect);
     }
     connect();
 </script>
