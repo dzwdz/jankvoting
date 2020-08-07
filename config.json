@@ -8,10 +8,16 @@
             "ttv channel name"
         ]
     },
+
     "rcon": {
         "address": "127.0.0.1",
         "port": 25575,
         "password": ""
     },
-    "voteInterval": 60
+
+    "votingTime": 60,
+    "breakTime": 60,
+    "initialDelay": 120,
+
+    "overlayPort": 1312
 }

@@ -8,7 +8,7 @@ module.exports = class votingHandler {
     constructor(voteWinnerCallback) {
         this.isRunning = false;
         this.currentlyVoting = false;
-        this.countdown = config.voteInterval;
+        this.countdown = config.initialDelay;
         this.voters = new Set();
         this.totalVotes = 0;
         this.options = [];
@@ -18,7 +18,7 @@ module.exports = class votingHandler {
 
         this.readCommands();
 
-        this.frontend = new overlayServer(1312);
+        this.frontend = new overlayServer(config.overlayPort);
 
         this.ttvClient = new tmi.client(config.ttv);
         this.ttvClient.connect().catch(console.error);
@@ -79,6 +79,7 @@ module.exports = class votingHandler {
 
         this.voters = new Set();
         this.totalVotes = 0;
+        this.countdown = config.votingTime;
     }
 
     finishPoll() {
@@ -88,6 +89,8 @@ module.exports = class votingHandler {
         this.voteWinnerCallback(winner);
         this.sendChatMsg(winner.name + " won with " + winner.votes + " votes");
         this.frontend.updateWinner(this.options.indexOf(winner));
+
+        this.countdown = config.breakTime;
     }
 
     // runs every second
@@ -105,12 +108,11 @@ module.exports = class votingHandler {
         else
             this.startPoll();
 
-        this.countdown = config.voteInterval;
         this.currentlyVoting = !this.currentlyVoting;
     }
 
     start() {
-        this.countdown = config.voteInterval;
+        this.countdown = config.initialDelay;
         this.currentlyVoting = false;
         this.isRunning = true;
     }
