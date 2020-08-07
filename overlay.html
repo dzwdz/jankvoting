@@ -65,10 +65,10 @@ body {
             }
         });
         socket.addEventListener("close", () => {
-            setTimeout(connect, 5000)
+            setTimeout(connect, 1000)
         });
         socket.addEventListener("error", () => {
-            setTimeout(connect, 5000)
+            setTimeout(connect, 1000)
         });
     }
     connect();
