@@ -1,5 +1,5 @@
 const Rcon = require("rcon");
-const votingHandler = require("./voting.js");
+const votingHandler = require("./votingHandler.js");
 
 const config = require("./config.json");
 const voting = new votingHandler(runEffect);
