@@ -1,6 +1,8 @@
 const Rcon = require("rcon");
+const votingHandler = require("./voting.js");
+
 const config = require("./config.json");
-const voting = require("./voting.js")(runEffect);
+const voting = new votingHandler(runEffect);
 
 function runEffect(effect) {
     game.send(effect.command);
